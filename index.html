@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Block</title>
+    <style>
+        body {
+            background-color: #F1FFFA;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #displayed-image {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="image-container">
+        <img id="displayed-image" src="" alt="Dynamic Image">
+    </div>
+    <script>
+        function getImageSrc(day, time) {
+            const images = {
+                monday: [
+                    { start: '00:00', end: '09:50', src: 'static/1_1.svg' },
+                    { start: '09:50', end: '11:30', src: 'static/1_2.svg' },
+                    { start: '11:30', end: '14:00', src: 'static/1_3.svg' },
+                    { start: '14:00', end: '23:59', src: 'static/1_4.svg' }
+                ],
+                tuesday: [
+                    { start: '00:00', end: '09:50', src: 'static/1_2.svg' },
+                    { start: '09:50', end: '11:30', src: 'static/1_3.svg' },
+                    { start: '11:30', end: '14:00', src: 'static/1_4.svg' },
+                    { start: '14:00', end: '23:59', src: 'static/1_1.svg' }
+                ],
+                wednesday: [
+                    { start: '00:00', end: '10:10', src: 'static/1_3.svg' },
+                    { start: '10:10', end: '11:30', src: 'static/1_4.svg' },
+                    { start: '11:30', end: '14:00', src: 'static/1_1.svg' },
+                    { start: '14:00', end: '23:59', src: 'static/1_2.svg' }
+                ],
+                thursday: [
+                    { start: '00:00', end: '09:50', src: 'static/1_4.svg' },
+                    { start: '09:50', end: '11:30', src: 'static/1_1.svg' },
+                    { start: '11:30', end: '14:00', src: 'static/1_2.svg' },
+                    { start: '14:00', end: '23:59', src: 'static/1_3.svg' }
+                ],
+                friday: [
+                    { start: '00:00', end: '23:59', src: 'static/friday.svg' }
+                ],
+                saturday: [
+                    { start: '00:00', end: '23:59', src: 'static/weekend.svg' }
+                ],
+                sunday: [
+                    { start: '00:00', end: '23:59', src: 'static/weekend.svg' }
+                ]
+            };
+
+            function isInRange(currentTime, startTime, endTime) {
+                return (currentTime >= startTime && currentTime <= endTime);
+            }
+
+            const currentTime = new Date();
+            const currentDay = currentTime.toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+            const formattedTime = currentTime.toTimeString().substring(0, 5);
+
+            const dayImages = images[currentDay] || [];
+
+            for (const period of dayImages) {
+                if (isInRange(formattedTime, period.start, period.end)) {
+                    return period.src;
+                }
+            }
+
+            return ''; // Default to empty if no match is found
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageSrc = getImageSrc();
+            const imgElement = document.getElementById('displayed-image');
+            if (imageSrc) {
+                imgElement.src = imageSrc;
+            }
+        });
+    </script>
+</body>
+</html>
